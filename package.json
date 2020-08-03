@@ -1,27 +1,27 @@
 {
-  "name": "radius-from",
-  "version": "1.0.0-pre",
-  "description": "A project generated from aunty's svelte project template.",
-  "license": "MIT",
-  "private": true,
-  "contributors": [
-    "Simon Elvery <simon@elvery.net>"
-  ],
-  "aunty": {
-    "type": "svelte"
-  },
-  "scripts": {
-    "start": "aunty serve",
-    "test": "aunty test"
-  },
-  "devDependencies": {
-    "@abcnews/aunty": "^10.9.5",
-    "@testing-library/svelte": "^3.0.0",
-    "sass": "^1.26.10"
-  },
-  "dependencies": {
-    "leaflet": "^1.6.0",
-    "svelte": "^3.24.0",
-    "throttle-debounce": "^2.2.1"
-  }
+	"name": "radius-from",
+	"version": "1.0.0",
+	"description": "A project generated from aunty's svelte project template.",
+	"license": "MIT",
+	"private": true,
+	"contributors": [
+		"Simon Elvery <simon@elvery.net>"
+	],
+	"aunty": {
+		"type": "svelte"
+	},
+	"scripts": {
+		"start": "aunty serve",
+		"test": "aunty test"
+	},
+	"devDependencies": {
+		"@abcnews/aunty": "^10.9.5",
+		"@testing-library/svelte": "^3.0.0",
+		"sass": "^1.26.10"
+	},
+	"dependencies": {
+		"leaflet": "^1.6.0",
+		"svelte": "^3.24.0",
+		"throttle-debounce": "^2.2.1"
+	}
 }
