@@ -16,14 +16,12 @@
   },
   "devDependencies": {
     "@abcnews/aunty": "^10.9.5",
-    "@testing-library/svelte": "^3.0.0"
+    "@testing-library/svelte": "^3.0.0",
+    "sass": "^1.26.10"
   },
   "dependencies": {
-    "@abcaustralia/nucleus": "^1.0.1",
-    "@abcaustralia/postcss-config": "^3.5.0",
     "leaflet": "^1.6.0",
-    "leaflet-geosearch": "^3.0.6",
-    "postcss-loader": "^3.0.0",
-    "svelte": "^3.24.0"
+    "svelte": "^3.24.0",
+    "throttle-debounce": "^2.2.1"
   }
 }

@@ -12,13 +12,17 @@
       center: latLng(location),
       zoomBox: false,
       doubleClickZoom: false,
-      dragging: false
+      dragging: !L.Browser.mobile,
+      tap: !L.Browser.mobile
     });
-    tileLayer("https://stamen-tiles.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg", {
-      attribution:
-        'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
-      maxZoom: 18
-    }).addTo(mapInstance);
+    tileLayer(
+      "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
+      {
+        attribution:
+          'Map tiles by <a href="http://stamen.com">Stamen Design</a>, under <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a>. Data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>.',
+        maxZoom: 18
+      }
+    ).addTo(mapInstance);
 
     circleInstance = circle(location, {
       stroke: false,
@@ -41,6 +45,7 @@
     height: 100%;
     position: relative;
     z-index: 1;
+    background-color: #ccc;
   }
 </style>
 
