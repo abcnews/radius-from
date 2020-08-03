@@ -1,0 +1,29 @@
+{
+  "name": "radius-from",
+  "version": "1.0.0-pre",
+  "description": "A project generated from aunty's svelte project template.",
+  "license": "MIT",
+  "private": true,
+  "contributors": [
+    "Simon Elvery <simon@elvery.net>"
+  ],
+  "aunty": {
+    "type": "svelte"
+  },
+  "scripts": {
+    "start": "aunty serve",
+    "test": "aunty test"
+  },
+  "devDependencies": {
+    "@abcnews/aunty": "^10.9.5",
+    "@testing-library/svelte": "^3.0.0"
+  },
+  "dependencies": {
+    "@abcaustralia/nucleus": "^1.0.1",
+    "@abcaustralia/postcss-config": "^3.5.0",
+    "leaflet": "^1.6.0",
+    "leaflet-geosearch": "^3.0.6",
+    "postcss-loader": "^3.0.0",
+    "svelte": "^3.24.0"
+  }
+}
