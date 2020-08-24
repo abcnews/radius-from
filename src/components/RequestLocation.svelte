@@ -1,13 +1,24 @@
 <script lang="ts">
-  import Button from "./Button.svelte";
+  import ReactComponent from "svelte-react";
+  import { Button } from "@abcaustralia/nucleus";
 
   export let text = "Share location";
-  export let success;
-  export let error;
+  export let success: PositionCallback;
+  export let error: PositionErrorCallback;
   export let timeout = 5000;
 
   const requestLocationAccess = () =>
     navigator.geolocation.getCurrentPosition(success, error, { timeout });
 </script>
 
-<Button {text} on:click={requestLocationAccess} />
+<style>
+  :global(button) {
+    width: 100%;
+  }
+</style>
+
+<ReactComponent
+  this={Button}
+  children={text}
+  onClick={requestLocationAccess}
+  variant="filled" />

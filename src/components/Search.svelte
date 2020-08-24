@@ -1,6 +1,7 @@
 <script lang="ts">
   import { throttle } from "throttle-debounce";
-  import Button from "./Button.svelte";
+  import ReactComponent from "svelte-react";
+  import { Button } from "@abcaustralia/nucleus";
   import AutoSuggest from "./AutoSuggest.svelte";
   import RequestLocation from "./RequestLocation.svelte";
   import { LatLon, Location } from "./types.d";
@@ -131,8 +132,10 @@
       on:value={handleSearchValue}
       on:select={handleSelectLocation} />
   {:else}
-    <Button
-      on:click={() => (suppliedLocation = false)}
-      text="Change location" />
+    <ReactComponent
+      this={Button}
+      onClick={() => (suppliedLocation = false)}
+      children="Change location"
+      variant="filled" />
   {/if}
 </div>
