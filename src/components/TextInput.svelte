@@ -1,6 +1,6 @@
-<script>
-  export let placeholder;
-  export let value;
+<script lang="ts">
+  export let placeholder: string;
+  export let value: string;
 </script>
 
 <style>

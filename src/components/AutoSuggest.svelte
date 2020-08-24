@@ -1,25 +1,30 @@
-<script>
+<script lang="ts">
   import { createEventDispatcher } from "svelte";
   import TextInput from "./TextInput.svelte";
+  import { Location } from "./types.d";
 
   const dispatch = createEventDispatcher();
 
-  export let value;
-  export let placeholder;
-  export let options;
-  export let valueAccessor = v => v;
-  export let labelAccessor = l => l;
+  export let value: string;
+  export let placeholder: string;
+  export let options: Location[] | false = false;
+  export let valueAccessor: (v: any) => any = v => v;
+  export let labelAccessor: (l: any) => string = l => l;
   export let noMatch = "No match";
 
-  let selectedOption;
+  let selectedOption: number | false = false;
   $: dispatch("value", { value });
 
+  $: console.log(labelAccessor(options && options[0]));
+
   const incrementSelectedOption = () => {
-    if (selectedOption === false) return (selectedOption = 0);
+    if (selectedOption === false || options === false)
+      return (selectedOption = 0);
     selectedOption = (selectedOption + 1) % options.length;
   };
 
   const decrementSelectedOption = () => {
+    if (options === false) return 0;
     if (selectedOption === false) return (selectedOption = options.length - 1);
     selectedOption =
       selectedOption - 1 < 0 ? options.length - 1 : selectedOption - 1;
@@ -37,7 +42,8 @@
   };
 
   const selectOption = () => {
-    dispatch("select", valueAccessor(options[selectedOption]));
+    selectedOption !== false &&
+      dispatch("select", valueAccessor(options[selectedOption]));
   };
 </script>
 
@@ -86,9 +92,9 @@
     on:keydown
     on:focus
     on:focus={() => (selectedOption = false)} />
-  {#if options}
+  {#if options !== false}
     <ol class="options">
-      {#if options.length === 0}
+      {#if options && options.length === 0}
         <li class="result no-match">{noMatch}</li>
       {/if}
       {#each options as option, i}

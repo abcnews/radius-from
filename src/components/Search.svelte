@@ -1,40 +1,43 @@
-<script>
-  import { onMount } from "svelte";
+<script lang="ts">
   import { throttle } from "throttle-debounce";
   import Button from "./Button.svelte";
   import AutoSuggest from "./AutoSuggest.svelte";
   import RequestLocation from "./RequestLocation.svelte";
+  import { LatLon, Location } from "./types.d";
+  export let location: LatLon;
 
-  export let location;
-
-  let locationError;
+  let locationError: Error;
   $: geolocationSupported = !!navigator.geolocation && !locationError;
-  let suppliedLocation;
-  let suggestedLocations;
+  let suppliedLocation: LatLon | false = false;
+  let suggestedLocations: Location[] | false = false;
 
-  const token =
+  const token: string =
     "pk.eyJ1IjoibmV3cy1vbjFpbmUiLCJhIjoiY2pjazE3OTl3MDUyeTJ3cGl2NWRxcDhpNyJ9.Kw4lhAbLUk9IPazutBe28w";
 
-  const fetchSuggestions = throttle(1000, query => {
-    fetch(
-      `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        query
-      )}.json?access_token=${token}&autocomplete=true&country=au&types=district%2Cpostcode%2Clocality%2Cplace%2Caddress%2Cneighborhood`
-    )
-      .then(res => {
-        if (!res.ok) {
-          throw new Error();
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (!data.features) {
-          throw new Error();
-        }
+  const fetchSuggestions: (query: string) => void = throttle(
+    1000,
+    false,
+    query => {
+      fetch(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+          query
+        )}.json?access_token=${token}&autocomplete=true&country=au&types=district%2Cpostcode%2Clocality%2Cplace%2Caddress%2Cneighborhood`
+      )
+        .then(res => {
+          if (!res.ok) {
+            throw new Error();
+          }
+          return res.json();
+        })
+        .then((data: { features: undefined | Location[] }) => {
+          if (!data.features) {
+            throw new Error();
+          }
 
-        suggestedLocations = data.features.slice(0, 3);
-      });
-  });
+          suggestedLocations = data.features.slice(0, 3);
+        });
+    }
+  );
 
   const handleSearchValue = ({ detail: { value } }) => {
     if (value.length < 3) {
@@ -44,14 +47,16 @@
     fetchSuggestions(value);
   };
 
-  const handleLocationSuccess = position => {
+  const handleLocationSuccess = (position: {
+    coords: { latitude: number; longitude: number };
+  }) => {
     location = suppliedLocation = [
       position.coords.latitude,
       position.coords.longitude
     ];
   };
 
-  const handleLocationError = err => {
+  const handleLocationError = (err: Error) => {
     locationError = err;
   };
 
@@ -123,8 +128,8 @@
     <AutoSuggest
       value=""
       placeholder="Type an address"
-      options={suggestedLocations}
-      labelAccessor={d => d.place_name}
+      options={suggestedLocations ? suggestedLocations : false}
+      labelAccessor={d => (d ? d.place_name : '')}
       on:value={handleSearchValue}
       on:select={handleSelectLocation} />
   {:else}

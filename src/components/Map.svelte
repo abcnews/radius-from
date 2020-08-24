@@ -1,19 +1,27 @@
-<script>
-  import { map, circle, latLng, tileLayer } from "leaflet";
+<script lang="ts">
+  import {
+    map,
+    circle,
+    latLng,
+    tileLayer,
+    Browser,
+    Circle,
+    Map
+  } from "leaflet";
   import { onMount } from "svelte";
-  export let location;
-  let mapElement;
-  let mapInstance;
-  let circleInstance;
+  import { LatLon } from "./types.d";
+  export let location: LatLon;
+  let mapElement: HTMLElement;
+  let mapInstance: Map;
+  let circleInstance: Circle;
 
   onMount(() => {
     mapInstance = map(mapElement, {
       zoom: 12,
       center: latLng(location),
-      zoomBox: false,
       doubleClickZoom: false,
-      dragging: !L.Browser.mobile,
-      tap: !L.Browser.mobile
+      dragging: !Browser.mobile,
+      tap: !Browser.mobile
     });
     tileLayer(
       "https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.jpg",
