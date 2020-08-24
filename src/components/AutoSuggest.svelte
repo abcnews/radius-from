@@ -15,8 +15,6 @@
   let selectedOption: number | false = false;
   $: dispatch("value", { value });
 
-  $: console.log(labelAccessor(options && options[0]));
-
   const incrementSelectedOption = () => {
     if (selectedOption === false || options === false)
       return (selectedOption = 0);
