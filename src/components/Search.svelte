@@ -7,7 +7,7 @@
   import { MAPBOX_TOKEN } from "../constants";
   export let location: LatLon;
 
-  let locationError: Error;
+  let locationError: PositionError;
   $: geolocationSupported = !!navigator.geolocation && !locationError;
   let suppliedLocation: LatLon | false = false;
   let suggestedLocations: Location[] | false = false;
@@ -54,7 +54,7 @@
     ];
   };
 
-  const handleLocationError = (err: Error) => {
+  const handleLocationError: PositionErrorCallback = (err: PositionError) => {
     locationError = err;
   };
 
