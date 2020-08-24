@@ -4,15 +4,13 @@
   import AutoSuggest from "./AutoSuggest.svelte";
   import RequestLocation from "./RequestLocation.svelte";
   import { LatLon, Location } from "./types.d";
+  import { MAPBOX_TOKEN } from "../constants";
   export let location: LatLon;
 
   let locationError: Error;
   $: geolocationSupported = !!navigator.geolocation && !locationError;
   let suppliedLocation: LatLon | false = false;
   let suggestedLocations: Location[] | false = false;
-
-  const token: string =
-    "pk.eyJ1IjoibmV3cy1vbjFpbmUiLCJhIjoiY2pjazE3OTl3MDUyeTJ3cGl2NWRxcDhpNyJ9.Kw4lhAbLUk9IPazutBe28w";
 
   const fetchSuggestions: (query: string) => void = throttle(
     1000,
@@ -21,7 +19,7 @@
       fetch(
         `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
           query
-        )}.json?access_token=${token}&autocomplete=true&country=au&types=district%2Cpostcode%2Clocality%2Cplace%2Caddress%2Cneighborhood`
+        )}.json?access_token=${MAPBOX_TOKEN}&autocomplete=true&country=au&types=district%2Cpostcode%2Clocality%2Cplace%2Caddress%2Cneighborhood`
       )
         .then(res => {
           if (!res.ok) {
