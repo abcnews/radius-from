@@ -1,4 +1,4 @@
-import './polyfills'
+import './polyfills';
 import App from './components/App.svelte';
 
 const PROJECT_NAME = 'radius-from';
