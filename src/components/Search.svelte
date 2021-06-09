@@ -34,11 +34,14 @@
   });
 
   const handleSearchValue = ({ detail: { value } }) => {
-    if (value.length < 6 || value.length % 2 === 0) {
+    if (value.length < 5) {
       suggestedLocations = false;
       return;
     }
-    fetchSuggestions(value);
+    // Only fetch new suggestions on every second keystroke
+    if (value.length % 2 === 0) {
+      fetchSuggestions(value);
+    }
   };
 
   const handleLocationSuccess = (position: { coords: { latitude: number; longitude: number } }) => {
