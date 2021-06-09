@@ -34,7 +34,7 @@
   });
 
   const handleSearchValue = ({ detail: { value } }) => {
-    if (value.length < 5 && value.length % 2 === 0) {
+    if (value.length < 6 || value.length % 2 === 0) {
       suggestedLocations = false;
       return;
     }
