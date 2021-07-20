@@ -1,10 +1,11 @@
 import 'promise-polyfill/src/polyfill';
-import 'whatwg-fetch'
+import 'whatwg-fetch';
 
 if (typeof Object.assign !== 'function') {
   // Must be writable: true, enumerable: false, configurable: true
-  Object.defineProperty(Object, "assign", {
-    value: function assign(target, varArgs) { // .length of function is 2
+  Object.defineProperty(Object, 'assign', {
+    value: function assign(target, varArgs) {
+      // .length of function is 2
       'use strict';
       if (target === null || target === undefined) {
         throw new TypeError('Cannot convert undefined or null to object');
@@ -33,8 +34,7 @@ if (typeof Object.assign !== 'function') {
 
 if (!Array.prototype.fill) {
   Object.defineProperty(Array.prototype, 'fill', {
-    value: function(value) {
-
+    value: function (value) {
       // Steps 1-2.
       if (this == null) {
         throw new TypeError('this is null or not defined');
@@ -50,19 +50,14 @@ if (!Array.prototype.fill) {
       var relativeStart = start >> 0;
 
       // Step 8.
-      var k = relativeStart < 0 ?
-        Math.max(len + relativeStart, 0) :
-        Math.min(relativeStart, len);
+      var k = relativeStart < 0 ? Math.max(len + relativeStart, 0) : Math.min(relativeStart, len);
 
       // Steps 9-10.
       var end = arguments[2];
-      var relativeEnd = end === undefined ?
-        len : end >> 0;
+      var relativeEnd = end === undefined ? len : end >> 0;
 
       // Step 11.
-      var finalValue = relativeEnd < 0 ?
-        Math.max(len + relativeEnd, 0) :
-        Math.min(relativeEnd, len);
+      var finalValue = relativeEnd < 0 ? Math.max(len + relativeEnd, 0) : Math.min(relativeEnd, len);
 
       // Step 12.
       while (k < finalValue) {

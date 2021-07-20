@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
-  import TextInput from "./TextInput.svelte";
-  import { Location } from "./types.d";
+  import { createEventDispatcher } from 'svelte';
+  import TextInput from './TextInput.svelte';
+  import { Location } from './types.d';
 
   const dispatch = createEventDispatcher();
 
@@ -10,40 +10,59 @@
   export let options: Location[] | false = false;
   export let valueAccessor: (v: any) => any = v => v;
   export let labelAccessor: (l: any) => string = l => l;
-  export let noMatch = "No match";
+  export let noMatch = 'No match';
 
   let selectedOption: number | false = false;
-  $: dispatch("value", { value });
+  $: dispatch('value', { value });
 
   const incrementSelectedOption = () => {
-    if (selectedOption === false || options === false)
-      return (selectedOption = 0);
+    if (selectedOption === false || options === false) return (selectedOption = 0);
     selectedOption = (selectedOption + 1) % options.length;
   };
 
   const decrementSelectedOption = () => {
     if (options === false) return 0;
     if (selectedOption === false) return (selectedOption = options.length - 1);
-    selectedOption =
-      selectedOption - 1 < 0 ? options.length - 1 : selectedOption - 1;
+    selectedOption = selectedOption - 1 < 0 ? options.length - 1 : selectedOption - 1;
   };
 
   const handleSearchKeydown = ev => {
-    if (ev.key === "Enter" && selectedOption !== false) {
+    if (ev.key === 'Enter' && selectedOption !== false) {
       selectOption();
     }
 
     if (options && options.length > 0) {
-      if (ev.key === "ArrowDown") incrementSelectedOption();
-      if (ev.key === "ArrowUp") decrementSelectedOption();
+      if (ev.key === 'ArrowDown') incrementSelectedOption();
+      if (ev.key === 'ArrowUp') decrementSelectedOption();
     }
   };
 
   const selectOption = () => {
-    selectedOption !== false &&
-      dispatch("select", valueAccessor(options[selectedOption]));
+    selectedOption !== false && dispatch('select', valueAccessor(options[selectedOption]));
   };
 </script>
+
+<div class="auto-complete" on:keydown={handleSearchKeydown}>
+  <TextInput {placeholder} bind:value on:keydown on:focus on:focus={() => (selectedOption = false)} />
+  {#if options !== false}
+    <ol class="options">
+      {#if options && options.length === 0}
+        <li class="result no-match">{noMatch}</li>
+      {/if}
+      {#each options as option, i}
+        <li class="result" class:selected={i === selectedOption}>
+          <button
+            on:mouseover={ev => ev.currentTarget.focus()}
+            on:focus={() => (selectedOption = i)}
+            on:click={selectOption}
+          >
+            {labelAccessor(option)}
+          </button>
+        </li>
+      {/each}
+    </ol>
+  {/if}
+</div>
 
 <style>
   .auto-complete {
@@ -82,29 +101,3 @@
     background-color: #ccc;
   }
 </style>
-
-<div class="auto-complete" on:keydown={handleSearchKeydown}>
-  <TextInput
-    {placeholder}
-    bind:value
-    on:keydown
-    on:focus
-    on:focus={() => (selectedOption = false)} />
-  {#if options !== false}
-    <ol class="options">
-      {#if options && options.length === 0}
-        <li class="result no-match">{noMatch}</li>
-      {/if}
-      {#each options as option, i}
-        <li class="result" class:selected={i === selectedOption}>
-          <button
-            on:mouseover={ev => ev.target.focus()}
-            on:focus={() => (selectedOption = i)}
-            on:click={selectOption}>
-            {labelAccessor(option)}
-          </button>
-        </li>
-      {/each}
-    </ol>
-  {/if}
-</div>

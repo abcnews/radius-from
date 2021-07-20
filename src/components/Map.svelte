@@ -41,6 +41,8 @@
   }
 </script>
 
+<div class="map" bind:this={mapElement} />
+
 <style>
   .map {
     width: 100%;
@@ -50,5 +52,3 @@
     background-color: #ccc;
   }
 </style>
-
-<div class="map" bind:this={mapElement} />
