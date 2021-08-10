@@ -1,43 +1,48 @@
 <script lang="ts">
-  import { map, circle, latLng, tileLayer, Browser, Circle, Map } from 'leaflet';
+  import { GeoJSONSource, Map } from 'maplibre-gl';
+  import { circle, point, bbox } from '@turf/turf';
   import { onMount } from 'svelte';
-  import { LatLon } from './types.d';
+  import type { LatLon } from './types.d';
+
   export let location: LatLon;
   export let radius: number;
 
-  const MIN_RADIUS = 1e3;
-  const MAX_RADIUS = 2.5e4;
+  const MIN_RADIUS = 1;
+  const MAX_RADIUS = 25;
 
   let mapElement: HTMLElement;
-  let mapInstance: Map;
-  let circleInstance: Circle;
+  let center: [number, number];
+  let map: Map;
+
+  $: center = [location[1], location[0]];
+  $: overlay = circle(point(center), Math.max(MIN_RADIUS, Math.min(radius, MAX_RADIUS)), 50, 'kilometers');
 
   onMount(() => {
-    mapInstance = map(mapElement, {
+    map = new Map({
+      container: mapElement,
+      style: 'https://www.abc.net.au/res/sites/news-projects/map-vector-style-bright/style.json',
       zoom: 12,
-      center: latLng(location),
-      doubleClickZoom: false,
-      dragging: !Browser.mobile,
-      tap: !Browser.mobile
+      center,
+      doubleClickZoom: false
     });
 
-    tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution:
-        'Map tiles and data by <a href="http://openstreetmap.org">OpenStreetMap</a>, under <a href="http://www.openstreetmap.org/copyright">ODbL</a>. <a href="https://www.openstreetmap.org/fixthemap">Fix the map</a>.'
-    }).addTo(mapInstance);
-
-    circleInstance = circle(location, {
-      stroke: false,
-      fillColor: '#f03',
-      fillOpacity: 0.2,
-      radius: Math.max(MIN_RADIUS, Math.min(radius, MAX_RADIUS))
-    }).addTo(mapInstance);
+    map.on('load', () => {
+      map.addSource('radius', { type: 'geojson', data: overlay });
+      map.addLayer({
+        id: 'radius',
+        type: 'fill',
+        source: 'radius',
+        paint: { 'fill-color': '#f03', 'fill-opacity': 0.2 }
+      });
+    });
   });
 
-  $: if (mapInstance && circleInstance) {
-    circleInstance.setLatLng(location);
-    mapInstance.panTo(latLng(location));
-    mapInstance.fitBounds(circleInstance.getBounds());
+  $: if (map && map.loaded()) {
+    (map.getSource('radius') as GeoJSONSource).setData(
+      circle(point(center), Math.max(MIN_RADIUS, Math.min(radius, MAX_RADIUS)), 50, 'kilometers')
+    );
+    map.panTo(center);
+    map.fitBounds(bbox(overlay) as [number, number, number, number]);
   }
 </script>
 

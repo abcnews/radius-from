@@ -15,7 +15,7 @@
   const [, llString] = /[?&]ll=([^&#]*)/i.exec(String(window.location)) || [];
   const km = parseFloat(decodeURIComponent(kmString));
   const [lat, lon] = llString ? decodeURIComponent(llString).split(',').map(parseFloat) : [];
-  const radius: number = (isNaN(km) ? 5 : km) * 1000;
+  const radius: number = isNaN(km) ? 5 : km;
   let location: LatLon = isNaN(lat) || isNaN(lon) ? mel : [lat, lon];
 </script>
 
