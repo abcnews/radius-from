@@ -3,7 +3,7 @@
   export let value: string;
 </script>
 
-<input type="text" {placeholder} bind:value on:focus on:keydown />
+<input type="text" {placeholder} bind:value on:focus on:keydown autofocus />
 
 <style>
   input {

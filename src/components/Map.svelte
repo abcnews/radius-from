@@ -23,7 +23,9 @@
       style: 'https://www.abc.net.au/res/sites/news-projects/map-vector-style-bright/style.json',
       zoom: 12,
       center,
-      doubleClickZoom: false
+      doubleClickZoom: false,
+      dragPan: false,
+      dragRotate: false
     });
 
     map.on('load', () => {
@@ -42,7 +44,8 @@
       circle(point(center), Math.max(MIN_RADIUS, Math.min(radius, MAX_RADIUS)), 50, 'kilometers')
     );
     map.panTo(center);
-    map.fitBounds(bbox(overlay) as [number, number, number, number]);
+    let bigger = circle(point(center), Math.max(MIN_RADIUS, Math.min(radius + 0.15, MAX_RADIUS)), 50, 'kilometers');
+    map.fitBounds(bbox(bigger) as [number, number, number, number]);
   }
 </script>
 

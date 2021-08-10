@@ -7,10 +7,11 @@
   import { MAPBOX_TOKEN } from '../constants';
   export let location: LatLon;
 
-  let locationError: GeolocationPositionError;
+  let locationError: GeolocationPositionError | undefined;
   $: geolocationSupported = !!navigator.geolocation && !locationError;
   let suppliedLocation: LatLon | false = false;
   let suggestedLocations: Location[] | false = false;
+  let manualEntryRequested: boolean = false;
 
   const fetchSuggestions: (query: string) => void = throttle(2000, false, query => {
     fetch(
@@ -56,6 +57,10 @@
     location = suppliedLocation = center.reverse();
     suggestedLocations = false;
   };
+
+  $: if (location) {
+    manualEntryRequested = false;
+  }
 </script>
 
 <div class="shim" class:active={!suppliedLocation} />
@@ -64,18 +69,27 @@
   {#if !suppliedLocation}
     <h2>Enter your location to see how far you can go from home</h2>
 
-    {#if geolocationSupported}
-      <RequestLocation text="Use my location" success={handleLocationSuccess} error={handleLocationError} />
-      <p>OR</p>
+    {#if geolocationSupported && !locationError && !manualEntryRequested}
+      <RequestLocation text="Detect my location" success={handleLocationSuccess} error={handleLocationError} />
     {/if}
-    <AutoSuggest
-      value=""
-      placeholder="Type an address"
-      options={suggestedLocations ? suggestedLocations : false}
-      labelAccessor={d => (d ? d.place_name : '')}
-      on:value={handleSearchValue}
-      on:select={handleSelectLocation}
-    />
+    {#if locationError}
+      <p>Could not detect location. Type an address to continue ...</p>
+    {/if}
+    {#if !manualEntryRequested && !locationError}
+      <button class="manual-entry-button" href="./" on:click|preventDefault={() => (manualEntryRequested = true)}
+        >or type an address ...</button
+      >
+    {/if}
+    {#if manualEntryRequested || locationError}
+      <AutoSuggest
+        value=""
+        placeholder="Type an address"
+        options={suggestedLocations ? suggestedLocations : false}
+        labelAccessor={d => (d ? d.place_name : '')}
+        on:value={handleSearchValue}
+        on:select={handleSelectLocation}
+      />
+    {/if}
   {:else}
     <Button on:click={() => (suppliedLocation = false)} text="Change location" />
   {/if}
@@ -123,5 +137,13 @@
 
   .shim.active {
     display: block;
+  }
+  .manual-entry-button {
+    border: 0;
+    padding: 0;
+    text-decoration: underline;
+    color: #fff;
+    background: none;
+    margin-top: 1rem;
   }
 </style>
